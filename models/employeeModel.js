@@ -14,11 +14,20 @@ const employeeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  salary: {
-    type: Number,
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
     required: true,
   },
-  hireDate: {
+  organization: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Organization',
+  },
+  createdAt: {
     type: Date,
     default: Date.now,
   },
