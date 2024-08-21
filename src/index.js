@@ -69,3 +69,7 @@ app.use((err, req, res, next) => {
   console.error('Error:', err.message);
   res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
 });
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/home.html'));
+});
