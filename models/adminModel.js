@@ -5,19 +5,20 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    lowercase: true,
+    trim: true
   },
   password: {
     type: String,
-    required: true,
+    required: true
   },
   organization: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Organization',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+    required: true
+  }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Admin', adminSchema);

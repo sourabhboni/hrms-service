@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
 
 // Set up routes for authentication, admin, and employee
 app.use('/auth', authRoutes);
+app.use('/auth', adminRoutes);
 app.use('/admin', adminRoutes);
 app.use('/employee', employeeRoutes);
 
