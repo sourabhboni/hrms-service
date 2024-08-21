@@ -1,31 +1,35 @@
-const Employee = require('../models/employeeModel');
+const Admin = require('../models/adminModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// Controller for employee login
-const employeeLogin = async (req, res) => {
+// Controller for admin login
+const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const employee = await Employee.findOne({ email }).populate('organization');
-    if (!employee) {
-      return res.status(404).json({ error: 'Employee not found' });
+    // Find the admin by email
+    const admin = await Admin.findOne({ email }).populate('organization');
+    if (!admin) {
+      return res.status(404).json({ error: 'Admin not found' });
     }
 
-    const isMatch = await bcrypt.compare(password, employee.password);
+    // Check if the password is correct
+    const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: employee._id, organizationId: employee.organization._id }, process.env.JWT_SECRET, {
+    // Generate a JWT token
+    const token = jwt.sign({ id: admin._id, organizationId: admin.organization._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
-    res.json({ token, employee });
+    // Send the token as a response
+    res.json({ token, organization: admin.organization });
   } catch (error) {
-    console.error('Error logging in employee:', error.message);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error during admin login:', error.message);
+    res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
   }
 };
 
-module.exports = { employeeLogin };
+module.exports = { adminLogin };
