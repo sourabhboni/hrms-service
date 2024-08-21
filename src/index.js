@@ -58,3 +58,14 @@ app.listen(PORT, () => {
 app.get('/test', (req, res) => {
   res.send('The server is working correctly!');
 });
+
+// Serve the error page for any unmatched routes
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, '../views/error.html'));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
+});
