@@ -4,14 +4,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const connectDB = require('../config/database'); // Adjusted to point to the correct directory
 
-
-// Import route files and middleware
-const connectDB = require('../config/database');
+// Corrected paths for routes
 const authRoutes = require('../routes/authRoutes');
 const adminRoutes = require('../routes/adminRoutes');
 const employeeRoutes = require('../routes/employeeRoutes');
-const { ensureAdminAuthenticated } = require('../middleware/authMiddleware'); // Import the middleware
+const { ensureAdminAuthenticated } = require('../middleware/authMiddleware'); // Ensure this path is also correct
 
 const app = express();
 
@@ -30,10 +29,10 @@ app.use(cookieParser());
 
 // Set EJS as the template engine
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '../views')); // Ensure the views path is correct
 
 // Serve static files (CSS, JS, Images)
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, '../public'))); // Ensure static files path is correct
 
 // Use the routes defined in your route files
 app.use('/auth', authRoutes);          // Routes related to authentication (login, register)
@@ -44,18 +43,18 @@ app.use('/admin', ensureAdminAuthenticated, adminRoutes); // Admin routes protec
 
 // Serve the homepage
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views/home.html'));
+    res.sendFile(path.join(__dirname, '../views/home.html'));
 });
 
 // Error handling for unmatched routes
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, 'views/error.html'));
+    res.status(404).sendFile(path.join(__dirname, '../views/error.html'));
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Error:', err.message);
-    res.status(500).sendFile(path.join(__dirname, 'views/error.html'));
+    res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
 });
 
 // Define the port and start the server

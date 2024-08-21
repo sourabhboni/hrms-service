@@ -1,2 +1,2 @@
-const connectDB = require('./config/database');
-console.log('Module found and loaded successfully');
+const authRoutes = require('./routes/authRoutes');
+console.log('Auth Routes module loaded successfully');
