@@ -1,76 +1,44 @@
-const Admin = require('../models/adminModel');
+const Employee = require('../models/employeeModel');
 const Organization = require('../models/organizationModel');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const path = require('path');
 
-// Controller for business registration
-const registerBusiness = async (req, res) => {
-  const { name, domain, email, password } = req.body;
+// Controller for creating an employee
+const createEmployee = async (req, res) => {
+  const { name, department, email, password, role } = req.body;
 
   try {
-    // Check if the domain is already taken
-    const existingOrganization = await Organization.findOne({ domain });
-    if (existingOrganization) {
-      return res.status(400).send('Domain already taken');
-    }
+    const organizationId = req.admin.organizationId;
 
-    // Check if the email is already used by an admin
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) {
-      return res.status(400).send('Email already registered');
-    }
-
-    // Hash the admin's password
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    // Create a new admin and organization
-    const admin = new Admin({ email, password: hashedPassword });
-    const organization = new Organization({ name, domain, admin: admin._id });
-
-    admin.organization = organization._id;
-
-    // Save admin and organization
-    await Promise.all([admin.save(), organization.save()]);
-
-    // Render the registration success page
-    res.status(201).render('registration-success', { organization });
-  } catch (error) {
-    console.error('Error registering business:', error.message);
-    res.status(500).send('Internal Server Error');
-  }
-};
-
-// Controller for admin login
-const adminLogin = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const admin = await Admin.findOne({ email }).populate('organization');
-    if (!admin) {
-      return res.status(404).send('Admin not found');
-    }
-
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) {
-      return res.status(400).send('Invalid credentials');
-    }
-
-    const token = jwt.sign({ id: admin._id, organizationId: admin.organization._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
+    // Create a new employee
+    const employee = new Employee({
+      name,
+      department,
+      email,
+      password: await bcrypt.hash(password, 12),
+      role,
+      organization: organizationId,
     });
 
-    // Store the token in a cookie (optional) or use a session
-    res.cookie('authToken', token, { httpOnly: true });
+    await employee.save();
 
-    // Redirect to the admin dashboard
-    res.redirect('/admin/dashboard');
+    res.status(201).json({ message: 'Employee created successfully', employee });
   } catch (error) {
-    console.error('Error during admin login:', error.message);
-    res.status(500).send('Internal Server Error');
+    console.error('Error creating employee:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
+// Controller for getting a list of employees
+const getEmployees = async (req, res) => {
+  try {
+    const organizationId = req.admin.organizationId;
+    const employees = await Employee.find({ organization: organizationId });
 
+    res.status(200).json({ employees });
+  } catch (error) {
+    console.error('Error fetching employees:', error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
 
-module.exports = { registerBusiness, adminLogin };
+module.exports = { createEmployee, getEmployees };

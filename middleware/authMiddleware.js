@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 // Middleware to ensure that the admin is authenticated
 const ensureAdminAuthenticated = (req, res, next) => {
-    const token = req.cookies.authToken; // Assuming the token is stored in a cookie
+    const token = req.cookies.authToken; // Assuming token is stored in cookies
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized: No token provided' });
