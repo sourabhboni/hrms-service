@@ -1,11 +1,16 @@
 const express = require('express');
+const path = require('path');
 const { adminLogin, registerBusiness } = require('../controllers/authController');
 
 const router = express.Router();
 
-router.post('/login', adminLogin);  // Admin login route
-router.post('/register', registerBusiness);  // Business registration route
+// POST route to handle business registration
+router.post('/register', registerBusiness);
 
-// No need for GET /register here, as it's already defined in `index.js`
+// GET route to serve the registration page
+router.get('/register', (req, res) => {
+    console.log("GET /register accessed");
+    res.sendFile(path.join(__dirname, '../views/registration.html'));
+});
 
 module.exports = router;

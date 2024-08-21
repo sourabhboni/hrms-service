@@ -40,11 +40,6 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/home.html'));
 });
 
-// Serve the registration page
-app.get('/auth/register', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/registration.html'));
-});
-
 // Protect admin routes that should require authentication
 app.use('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, '../views/admin-dashboard.html')); // Ensure this path points to your admin dashboard HTML file
@@ -53,21 +48,6 @@ app.use('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
 // Serve the admin login page (GET request)
 app.get('/admin/login', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/admin-login.html'));
-});
-
-// Serve the employee login page (GET request)
-app.get('/employee/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/employee-login.html'));
-});
-
-// Serve the employee landing page after login
-app.get('/employee/home', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/employee-landing.html'));
-});
-
-// Serve the registration success page after successful registration
-app.get('/auth/registration-success', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/registration-success.html'));
 });
 
 // Error handling for unmatched routes
@@ -84,5 +64,5 @@ app.use((err, req, res, next) => {
 // Define the port and start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`HRMS Service is running on port ${PORT}`);
 });
