@@ -1,16 +1,18 @@
 const express = require('express');
-const path = require('path');
-const { employeeLogin } = require('../controllers/employeeController');
+const { employeeLogin, employeeLanding } = require('../controllers/employeeController');
+const { ensureEmployeeAuthenticated } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// POST route to handle employee login
+// Route to handle employee login (POST request)
 router.post('/login', employeeLogin);
 
-// GET route to serve the employee login page
+// Route to serve the employee login page (GET request)
 router.get('/login', (req, res) => {
-    console.log("GET /employee/login accessed");
     res.sendFile(path.join(__dirname, '../views/employee-login.html'));
 });
+
+// Route to serve the employee landing page (GET request)
+router.get('/home', ensureEmployeeAuthenticated, employeeLanding);
 
 module.exports = router;

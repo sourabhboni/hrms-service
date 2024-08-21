@@ -4,12 +4,14 @@ const { adminLogin, registerBusiness } = require('../controllers/authController'
 
 const router = express.Router();
 
-// POST route to handle business registration
+// Route to handle admin login (POST request)
+router.post('/login', adminLogin);
+
+// Route to handle business registration (POST request)
 router.post('/register', registerBusiness);
 
-// GET route to serve the registration page
+// Route to serve the registration page (GET request)
 router.get('/register', (req, res) => {
-    console.log("GET /register accessed");
     res.sendFile(path.join(__dirname, '../views/registration.html'));
 });
 

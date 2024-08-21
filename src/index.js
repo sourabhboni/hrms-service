@@ -7,15 +7,13 @@ const connectDB = require('../config/database');
 // Import route files
 const authRoutes = require('../routes/authRoutes');
 const employeeRoutes = require('../routes/employeeRoutes');
-const { ensureAdminAuthenticated } = require('../middleware/authMiddleware');
+const adminRoutes = require('../routes/adminRoutes');
 
 const app = express();
 
-// Connect to MongoDB (if using a MongoDB database)
-connectDB();
+connectDB(); // Connect to MongoDB
 
-// Use Helmet to set secure HTTP headers
-app.use(helmet());
+app.use(helmet()); // Set secure HTTP headers using Helmet
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -34,20 +32,11 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 // Use the routes defined in your route files
 app.use('/auth', authRoutes);          // Routes for authentication (register, login)
 app.use('/employee', employeeRoutes);  // Routes for employee operations (login)
+app.use('/admin', adminRoutes);        // Routes for admin operations
 
 // Serve the homepage
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/home.html'));
-});
-
-// Protect admin routes that should require authentication
-app.use('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/admin-dashboard.html')); // Ensure this path points to your admin dashboard HTML file
-});
-
-// Serve the admin login page (GET request)
-app.get('/admin/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/admin-login.html'));
 });
 
 // Error handling for unmatched routes
@@ -61,8 +50,8 @@ app.use((err, req, res, next) => {
     res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
 });
 
-// Define the port and start the server
+// Start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`HRMS Service is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
