@@ -1,3 +1,5 @@
+console.log('Current Directory:', __dirname);
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -5,7 +7,7 @@ const helmet = require('helmet');
 
 
 // Import route files and middleware
-const connectDB = require('./config/database');
+const connectDB = require('../config/database');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
