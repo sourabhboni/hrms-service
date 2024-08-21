@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Your Business</title>
-    <link rel="stylesheet" href="/public/css/styles.css"> <!-- Example stylesheet -->
+    <title>Business Registration</title>
+    <link rel="stylesheet" href="/public/css/styles.css">
 </head>
 <body>
-    <h1>Register Your Business</h1>
-    <form action="/auth/register" method="POST">
-        <label for="name">Business Name:</label>
-        <input type="text" id="name" name="name" required>
+    <header>
+        <h1>Register Your Business</h1>
+    </header>
 
-        <label for="domain">Business Domain:</label>
-        <input type="text" id="domain" name="domain" required>
+    <main>
+        <form action="/auth/register" method="POST">
+            <div>
+                <label for="name">Business Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div>
+                <label for="domain">Domain Name:</label>
+                <input type="text" id="domain" name="domain" placeholder="yourbusiness.com" required>
+            </div>
+            
+            <div>
+                <label for="email">Admin Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-        <label for="email">Admin Email:</label>
-        <input type="email" id="email" name="email" required>
+            <div>
+                <label for="password">Admin Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+            <button type="submit">Register</button>
+        </form>
+    </main>
 
-        <button type="submit">Register</button>
-    </form>
+    <script src="/public/js/main.js"></script>
 </body>
 </html>

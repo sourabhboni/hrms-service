@@ -1,19 +1,24 @@
+console.log('Current Directory:', __dirname);
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const connectDB = require('../config/database');
+const connectDB = require('../config/database'); // Adjusted to point to the correct directory
 
-// Import route files
+// Corrected paths for routes
 const authRoutes = require('../routes/authRoutes');
-const employeeRoutes = require('../routes/employeeRoutes');
 const adminRoutes = require('../routes/adminRoutes');
+const employeeRoutes = require('../routes/employeeRoutes');
+const { ensureAdminAuthenticated } = require('../middleware/authMiddleware'); // Ensure this path is also correct
 
 const app = express();
 
-connectDB(); // Connect to MongoDB
+// Connect to MongoDB (if using a MongoDB database)
+connectDB();
 
-app.use(helmet()); // Set secure HTTP headers using Helmet
+// Use Helmet to set secure HTTP headers
+app.use(helmet());
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -24,15 +29,17 @@ app.use(cookieParser());
 
 // Set EJS as the template engine
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, '../views'));
+app.set('views', path.join(__dirname, '../views')); // Ensure the views path is correct
 
 // Serve static files (CSS, JS, Images)
-app.use('/public', express.static(path.join(__dirname, '../public')));
+app.use('/public', express.static(path.join(__dirname, '../public'))); // Ensure static files path is correct
 
 // Use the routes defined in your route files
-app.use('/auth', authRoutes);          // Routes for authentication (register, login)
-app.use('/employee', employeeRoutes);  // Routes for employee operations (login)
-app.use('/admin', adminRoutes);        // Routes for admin operations
+app.use('/auth', authRoutes);          // Routes related to authentication (login, register)
+app.use('/employee', employeeRoutes);  // Routes related to employee operations
+
+// Protect the admin routes with the ensureAdminAuthenticated middleware
+app.use('/admin', ensureAdminAuthenticated, adminRoutes); // Admin routes protected by middleware
 
 // Serve the homepage
 app.get('/', (req, res) => {
@@ -50,8 +57,8 @@ app.use((err, req, res, next) => {
     res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
 });
 
-// Start the server
+// Define the port and start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`HRMS Service is running on http://localhost:${PORT}`);
 });
