@@ -1,5 +1,5 @@
-const Organization = require('../models/organizationModel');
 const Admin = require('../models/adminModel');
+const Organization = require('../models/organizationModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const path = require('path');
@@ -9,11 +9,22 @@ const registerBusiness = async (req, res) => {
   const { name, domain, email, password } = req.body;
 
   try {
+    // Check if the domain is already taken
+    const existingDomain = await Organization.findOne({ domain });
+    if (existingDomain) {
+      return res.status(400).json({ error: 'Domain already taken' });
+    }
+
+    // Hash the admin's password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Create a new admin
     const admin = new Admin({ email, password: hashedPassword });
-    const organization = new Organization({ name, domain, admin: admin._id });
 
+    // Create a new organization and link the admin
+    const organization = new Organization({ name, domain, admin: admin._id });
+    
+    // Save both admin and organization to the database
     await admin.save();
     await organization.save();
 
@@ -50,15 +61,15 @@ const adminLogin = async (req, res) => {
     console.log('Password match successful');
 
     // Generate a JWT token
-    const token = jwt.sign({ id: admin._id, organizationId: admin.organization._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: admin._id, organizationId: admin.organization.__id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
     console.log('Login successful, JWT token generated');
     res.json({ token, organization: admin.organization });
   } catch (error) {
-    console.error('Error during admin login:', error);  // More detailed logging
-    res.status(500).json({ error: 'Internal Server Error' });  // Return error as JSON
+    console.error('Error during admin login:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
