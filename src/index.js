@@ -7,7 +7,6 @@ const connectDB = require('../config/database');
 // Import route files
 const authRoutes = require('../routes/authRoutes');
 const employeeRoutes = require('../routes/employeeRoutes');
-const adminRoutes = require('../routes/adminRoutes'); // Assuming you have this file
 const { ensureAdminAuthenticated } = require('../middleware/authMiddleware');
 
 const app = express();
@@ -41,6 +40,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/home.html'));
 });
 
+// Serve the registration page
+app.get('/auth/register', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/registration.html'));
+});
+
 // Protect admin routes that should require authentication
 app.use('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, '../views/admin-dashboard.html')); // Ensure this path points to your admin dashboard HTML file
@@ -48,18 +52,33 @@ app.use('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
 
 // Serve the admin login page (GET request)
 app.get('/admin/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/admin-login.html')); // Ensure this path points to your admin login HTML file
+    res.sendFile(path.join(__dirname, '../views/admin-login.html'));
+});
+
+// Serve the employee login page (GET request)
+app.get('/employee/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/employee-login.html'));
+});
+
+// Serve the employee landing page after login
+app.get('/employee/home', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/employee-landing.html'));
+});
+
+// Serve the registration success page after successful registration
+app.get('/auth/registration-success', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/registration-success.html'));
 });
 
 // Error handling for unmatched routes
 app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, '../views/error.html')); // Ensure this path points to your error HTML file
+    res.status(404).sendFile(path.join(__dirname, '../views/error.html'));
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error('Error:', err.message);
-    res.status(500).sendFile(path.join(__dirname, '../views/error.html')); // Ensure this path points to your error HTML file
+    res.status(500).sendFile(path.join(__dirname, '../views/error.html'));
 });
 
 // Define the port and start the server
