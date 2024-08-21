@@ -9,7 +9,8 @@ router.post('/login', employeeLogin);
 
 // Route to serve the employee login page (GET request)
 router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/employee-login.html')); // Make sure this path points to your employee login HTML file
+    console.log("Serving employee-login.html");
+    res.sendFile(path.join(__dirname, '../views/employee-login.html')); // Make sure this path is correct
 });
 
 module.exports = router;
