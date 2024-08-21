@@ -37,6 +37,11 @@ app.get('/register', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/registration.html'));
 });
 
+// Serve the admin login page
+app.get('/admin/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/admin-login.html'));
+});
+
 app.get('/admin/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/admin-dashboard.html'));
 });
