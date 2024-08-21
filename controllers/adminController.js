@@ -60,8 +60,8 @@ const adminLogin = async (req, res) => {
 
     console.log('Password match successful');
 
-    // Generate a JWT token
-    const token = jwt.sign({ id: admin._id, organizationId: admin.organization.__id }, process.env.JWT_SECRET, {
+    // Generate a JWT token with the correct organization ID
+    const token = jwt.sign({ id: admin._id, organizationId: admin.organization._id }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -72,5 +72,6 @@ const adminLogin = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
 
 module.exports = { registerBusiness, adminLogin };
