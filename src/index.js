@@ -2,9 +2,10 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const connectDB = require('./config/database');
+
 
 // Import route files and middleware
+const connectDB = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
