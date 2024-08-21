@@ -8,10 +8,10 @@ const helmet = require('helmet');
 
 // Import route files and middleware
 const connectDB = require('../config/database');
-const authRoutes = require('./routes/authRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const employeeRoutes = require('./routes/employeeRoutes');
-const { ensureAdminAuthenticated } = require('./middleware/authMiddleware'); // Import the middleware
+const authRoutes = require('../routes/authRoutes');
+const adminRoutes = require('../routes/adminRoutes');
+const employeeRoutes = require('../routes/employeeRoutes');
+const { ensureAdminAuthenticated } = require('../middleware/authMiddleware'); // Import the middleware
 
 const app = express();
 
