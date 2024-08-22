@@ -8,22 +8,15 @@
 </head>
 <body>
     <header>
-        <h1>Welcome, Admin!</h1>
-        <nav>
-            <ul>
-                <li><a href="/admin/dashboard">Dashboard</a></li>
-                <li><a href="/admin/create-employee">Create Employee</a></li>
-                <li><a href="/admin/view-employees">View Employees</a></li>
-                <li><a href="/logout">Logout</a></li>
-            </ul>
-        </nav>
+        <h1>Admin Dashboard</h1>
     </header>
 
     <main>
-        <h2>Manage Your Employees</h2>
-        <!-- Admin functionalities like creating employees will go here -->
+        <a href="/admin/create-employee">Create Employee</a>
+        <a href="/admin/employees">View Employees</a>
+        <a href="/admin/logout" id="logout-btn">Logout</a> <!-- Logout link -->
     </main>
 
-    <script src="/public/js/main.js"></script>
+    <script src="/public/js/admin-dashboard.js"></script>
 </body>
 </html>

@@ -25,6 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse cookies
 app.use(cookieParser());
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/home.html'));
+});
+
 // Set EJS as the template engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
@@ -37,9 +41,23 @@ app.use('/auth', authRoutes);         // Routes for authentication (register, lo
 app.use('/', employeeRoutes);         // Routes for employee operations (login, home)
 app.use('/admin', adminRoutes);       // Admin routes for creating and viewing employees
 
-// Serve the homepage
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/home.html'));
+// Serve the admin login page (GET request)
+app.get('/admin/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/admin-login.html')); // Ensure this path points to your admin login HTML file
+});
+
+// Serve the admin dashboard page (GET request)
+app.get('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/admin-dashboard.html')); // Ensure this path points to your admin dashboard HTML file
+});
+// Serve the employee creation page (GET request)
+app.get('/admin/create-employee', ensureAdminAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/create-employee.html'));
+});
+
+// Serve the employee viewing page (GET request)
+app.get('/admin/view-employees', ensureAdminAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/view-employees.html'));
 });
 
 // Error handling for unmatched routes
