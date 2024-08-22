@@ -7,6 +7,7 @@ const connectDB = require('../config/database');
 // Import route files
 const authRoutes = require('../routes/authRoutes');
 const employeeRoutes = require('../routes/employeeRoutes');
+const adminRoutes = require('../routes/adminRoutes'); // Import the admin routes
 const { ensureAdminAuthenticated, ensureEmployeeAuthenticated } = require('../middleware/authMiddleware');
 
 const app = express();
@@ -34,20 +35,11 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 // Use the routes defined in your route files
 app.use('/auth', authRoutes);         // Routes for authentication (register, login)
 app.use('/', employeeRoutes);         // Routes for employee operations (login, home)
+app.use('/admin', adminRoutes);       // Admin routes for creating and viewing employees
 
 // Serve the homepage
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/home.html'));
-});
-
-// Protect admin routes that should require authentication
-app.get('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/admin-dashboard.html')); // Ensure this path points to your admin dashboard HTML file
-});
-
-// Serve the admin login page (GET request)
-app.get('/admin/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../views/admin-login.html')); // Ensure this path points to your admin login HTML file
 });
 
 // Error handling for unmatched routes

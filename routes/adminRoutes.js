@@ -1,9 +1,13 @@
 const express = require('express');
 const { createEmployee, getEmployees } = require('../controllers/adminController');
+const { ensureAdminAuthenticated } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-router.post('/create-employee', createEmployee);  // Ensure createEmployee is properly imported and defined
-router.get('/employees', getEmployees);           // Ensure getEmployees is properly imported and defined
+// Route to handle creating a new employee (POST request)
+router.post('/create-employee', ensureAdminAuthenticated, createEmployee);
+
+// Route to get the list of all employees (GET request)
+router.get('/employees', ensureAdminAuthenticated, getEmployees);
 
 module.exports = router;
