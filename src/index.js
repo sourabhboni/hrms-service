@@ -7,12 +7,11 @@ const connectDB = require('../config/database');
 // Import route files
 const authRoutes = require('../routes/authRoutes');
 const employeeRoutes = require('../routes/employeeRoutes');
-const adminRoutes = require('../routes/adminRoutes'); // Assuming you have this file
-const { ensureAdminAuthenticated } = require('../middleware/authMiddleware');
+const { ensureAdminAuthenticated, ensureEmployeeAuthenticated } = require('../middleware/authMiddleware');
 
 const app = express();
 
-// Connect to MongoDB (if using a MongoDB database)
+// Connect to MongoDB
 connectDB();
 
 // Use Helmet to set secure HTTP headers
@@ -33,8 +32,8 @@ app.set('views', path.join(__dirname, '../views'));
 app.use('/public', express.static(path.join(__dirname, '../public')));
 
 // Use the routes defined in your route files
-app.use('/auth', authRoutes);          // Routes for authentication (register, login)
-app.use('/', employeeRoutes);          // Routes for employee operations (login, home)
+app.use('/auth', authRoutes);         // Routes for authentication (register, login)
+app.use('/', employeeRoutes);         // Routes for employee operations (login, home)
 
 // Serve the homepage
 app.get('/', (req, res) => {
@@ -42,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 // Protect admin routes that should require authentication
-app.use('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
+app.get('/admin/dashboard', ensureAdminAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, '../views/admin-dashboard.html')); // Ensure this path points to your admin dashboard HTML file
 });
 

@@ -1,6 +1,23 @@
 const jwt = require('jsonwebtoken');
 const Organization = require('../models/organizationModel');
 
+const ensureAdminAuthenticated = async (req, res, next) => {
+    const token = req.cookies.authToken;
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized: No token provided' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.admin = decoded;
+        next();
+    } catch (error) {
+        console.error('JWT verification failed:', error.message);
+        return res.status(401).json({ error: 'Unauthorized: Invalid token' });
+    }
+};
+
 const ensureEmployeeAuthenticated = async (req, res, next) => {
     const token = req.cookies.authToken;
 
@@ -24,4 +41,4 @@ const ensureEmployeeAuthenticated = async (req, res, next) => {
     }
 };
 
-module.exports = { ensureEmployeeAuthenticated };
+module.exports = { ensureAdminAuthenticated, ensureEmployeeAuthenticated };
