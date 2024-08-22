@@ -34,7 +34,7 @@ app.use('/public', express.static(path.join(__dirname, '../public')));
 
 // Use the routes defined in your route files
 app.use('/auth', authRoutes);          // Routes for authentication (register, login)
-app.use('/employee', employeeRoutes);  // Routes for employee operations (login)
+app.use('/', employeeRoutes);          // Routes for employee operations (login, home)
 
 // Serve the homepage
 app.get('/', (req, res) => {

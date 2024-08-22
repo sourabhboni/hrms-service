@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
+const Organization = require('../models/organizationModel');
 
-// Middleware to ensure that the admin is authenticated
-const ensureAdminAuthenticated = (req, res, next) => {
-    const token = req.cookies.authToken; // Assuming token is stored in cookies
+const ensureEmployeeAuthenticated = async (req, res, next) => {
+    const token = req.cookies.authToken;
 
     if (!token) {
         return res.status(401).json({ error: 'Unauthorized: No token provided' });
@@ -10,7 +10,13 @@ const ensureAdminAuthenticated = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.admin = decoded; // Attach the decoded token to the request object
+        const organization = await Organization.findById(decoded.organizationId);
+
+        if (organization.domain !== req.params.domain) {
+            return res.status(403).json({ error: 'Forbidden: Incorrect domain' });
+        }
+
+        req.employee = decoded;
         next();
     } catch (error) {
         console.error('JWT verification failed:', error.message);
@@ -18,25 +24,4 @@ const ensureAdminAuthenticated = (req, res, next) => {
     }
 };
 
-// Middleware to ensure that the employee is authenticated
-const ensureEmployeeAuthenticated = (req, res, next) => {
-    const token = req.headers['authorization'];
-    
-    if (!token) {
-        return res.status(401).json({ error: 'No token provided, authorization denied' });
-    }
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.employee = decoded;
-        next();
-    } catch (err) {
-        console.error('JWT verification failed:', err.message);
-        res.status(401).json({ error: 'Invalid token, authorization denied' });
-    }
-};
-
-module.exports = {
-    ensureAdminAuthenticated,
-    ensureEmployeeAuthenticated
-};
+module.exports = { ensureEmployeeAuthenticated };
